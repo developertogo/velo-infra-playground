@@ -1,0 +1,9 @@
+go 1.25.0
+
+use (
+	./k8s-operator
+	./mcp-server
+	./nccl-visualizer
+	./redfish-simulator
+	./slurm-simulator
+)

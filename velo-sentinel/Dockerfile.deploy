@@ -1,0 +1,16 @@
+# Stage 1: Build the Spring Boot application using Java 25
+# Note: Execute docker build with context set to the external sentinel repo:
+# docker build -f sentinel/Dockerfile.deploy -t velo-sentinel:latest /Users/chung/sandbox/inference/sentinel
+FROM openjdk:25-slim AS builder
+WORKDIR /app
+COPY . .
+# Build the Spring Boot executable JAR using Gradle
+RUN cd gateway/sentinel && ./gradlew bootJar --no-daemon
+
+# Stage 2: Runtime image using OpenJDK 25
+FROM openjdk:25-slim
+WORKDIR /app
+# Copy the built jar from gradle build output
+COPY --from=builder /app/gateway/sentinel/build/libs/sentinel-0.0.1-SNAPSHOT.jar /app/sentinel.jar
+EXPOSE 9000
+ENTRYPOINT ["java", "-jar", "sentinel.jar"]

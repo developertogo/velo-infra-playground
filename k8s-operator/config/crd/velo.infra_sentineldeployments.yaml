@@ -1,0 +1,61 @@
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  name: sentineldeployments.velo.infra
+spec:
+  group: velo.infra
+  names:
+    kind: SentinelDeployment
+    listKind: SentinelDeploymentList
+    plural: sentineldeployments
+    singular: sentineldeployment
+  scope: Namespaced
+  versions:
+  - name: v1alpha1
+    served: true
+    storage: true
+    subresources:
+      status: {}
+    schema:
+      openAPIV3Schema:
+        type: object
+        properties:
+          spec:
+            type: object
+            required:
+            - gatewayAddress
+            - targetDeployment
+            properties:
+              gatewayAddress:
+                type: string
+                description: The endpoint address of the Sentinel gateway server (e.g. velo-sentinel:9000).
+              minReplicas:
+                type: integer
+                format: int32
+                description: The minimum number of worker replicas (default 1).
+              maxReplicas:
+                type: integer
+                format: int32
+                description: The maximum number of worker replicas (default 10).
+              scaleThreshold:
+                type: integer
+                format: int32
+                description: The queue depth per replica at which scaling starts (default 5 requests).
+              targetDeployment:
+                type: string
+                description: The name of the Kubernetes Deployment to scale.
+          status:
+            type: object
+            properties:
+              replicas:
+                type: integer
+                format: int32
+                description: The current replica count of the worker deployment.
+              activeQueueDepth:
+                type: integer
+                format: int32
+                description: The last observed request queue depth.
+              lastScaleTime:
+                type: string
+                format: date-time
+                description: The last time a scaling operation was triggered.

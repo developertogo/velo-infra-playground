@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: sentinel-config
+  namespace: default
+data:
+  GATEWAY_PORT: "9000"
+  LOG_LEVEL: "INFO"
+  DOWNSTREAM_TRITON_URL: "http://triton-inference-server:8000"

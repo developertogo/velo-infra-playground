@@ -1,0 +1,14 @@
+# Stage 1: Build Rust release binary
+# Note: Execute docker build with context set to the external core repo:
+# docker build -f core/Dockerfile.deploy -t velo-core:latest /Users/chung/sandbox/inference/core
+FROM rust:1.80-slim AS builder
+WORKDIR /app
+COPY . .
+RUN cargo build --release
+
+# Stage 2: Runtime image using debian-slim
+FROM debian:bookworm-slim
+WORKDIR /app
+COPY --from=builder /app/target/release/velo-core /app/velo-core
+EXPOSE 8080
+ENTRYPOINT ["./velo-core"]
