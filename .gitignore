@@ -36,3 +36,8 @@ Thumbs.db
 *.njsproj
 *.sln
 *.sw?
+
+# Metaflow artifacts
+sentinel-deployment.json
+.metaflow/
+
